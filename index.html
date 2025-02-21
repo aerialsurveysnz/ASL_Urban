@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Mapbox GeoJSON Layer</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
+
+
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+  </style>
+</head>
+<body>
+  <div id='map'></div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiamFtZXMtbWNrZW56aWUtYXNsIiwiYSI6ImNsaHBtYXo1aDA4MWczZ281bXJhbnc0dGMifQ.8pxJxAy6HV0CQfuibaIFmw';
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      center: [175.52,-41.129],
+      zoom: 5
+    });
+
+
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea1', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Christchurch_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer1',
+        type: 'fill',
+        source: 'ProjectArea1',
+        paint: {
+          'fill-color': 'Blue',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource1', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Christchurch_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer1',
+        type: 'fill',
+        source: 'CoverageSource1',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre1', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Christchurch_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre1',
+        type: 'circle',
+        source: 'ProjectCentre1',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre1'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer1'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer1'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea2', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Chch_CBD_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer2',
+        type: 'fill',
+        source: 'ProjectArea2',
+        paint: {
+          'fill-color': 'Orange',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource2', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Chch_CBD_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer2',
+        type: 'fill',
+        source: 'CoverageSource2',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre2', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Chch_CBD_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre2',
+        type: 'circle',
+        source: 'ProjectCentre2',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre2'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer2'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer2'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea3', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Waimate_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer3',
+        type: 'fill',
+        source: 'ProjectArea3',
+        paint: {
+          'fill-color': 'Purple',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource3', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Waimate_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer3',
+        type: 'fill',
+        source: 'CoverageSource3',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre3', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Cantebury_Urban_Imagery_2023_2024/Data/Waimate_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre3',
+        type: 'circle',
+        source: 'ProjectCentre3',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre3'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer3'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer3'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea4', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Auckland_Council_Imagery_2022_2024/Data/Auckland_Council_Imagery_2022_2024_yr3%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer4',
+        type: 'fill',
+        source: 'ProjectArea4',
+        paint: {
+          'fill-color': '#90D5FF',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource4', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Auckland_Council_Imagery_2022_2024/Data/Auckland_Council_Imagery_2022_2024_yr3%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer4',
+        type: 'fill',
+        source: 'CoverageSource4',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre4', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Auckland_Council_Imagery_2022_2024/Data/Auckland_Council_Imagery_2022_2024_yr3%20Imagery%20Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre4',
+        type: 'circle',
+        source: 'ProjectCentre4',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre4'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer4'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer4'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Description + " - Area 3 </b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              "<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +                             
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: " + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+});
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea5', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Grey_DC_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer5',
+        type: 'fill',
+        source: 'ProjectArea5',
+        paint: {
+          'fill-color': 'White',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource5', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Grey_DC_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer5',
+        type: 'fill',
+        source: 'CoverageSource5',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre5', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Grey_DC_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre5',
+        type: 'circle',
+        source: 'ProjectCentre5',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre5'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer5'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer5'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea6', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Westland_DC_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer6',
+        type: 'fill',
+        source: 'ProjectArea6',
+        paint: {
+          'fill-color': 'blue',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource6', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Westland_DC_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer6',
+        type: 'fill',
+        source: 'CoverageSource6',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre6', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Westland_DC_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre6',
+        type: 'circle',
+        source: 'ProjectCentre6',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre6'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer6'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer6'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea7', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Buller_DC_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer7',
+        type: 'fill',
+        source: 'ProjectArea7',
+        paint: {
+          'fill-color': 'Yellow',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource7', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Buller_DC_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer7',
+        type: 'fill',
+        source: 'CoverageSource7',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre7', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WestCoast_Imagery_2024_2025/Data/Buller_DC_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre7',
+        type: 'circle',
+        source: 'ProjectCentre7',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre7'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer7'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer7'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea8', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/CDC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer8',
+        type: 'fill',
+        source: 'ProjectArea8',
+        paint: {
+          'fill-color': '#00b159',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource8', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/CDC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer8',
+        type: 'fill',
+        source: 'CoverageSource8',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre8', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/CDC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre8',
+        type: 'circle',
+        source: 'ProjectCentre8',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre8'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer8'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer8'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea9', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/HCC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer9',
+        type: 'fill',
+        source: 'ProjectArea9',
+        paint: {
+          'fill-color': '#00aedb',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource9', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/HCC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer9',
+        type: 'fill',
+        source: 'CoverageSource9',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre9', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/HCC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre9',
+        type: 'circle',
+        source: 'ProjectCentre9',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                19,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre9'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer9'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer9'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+    
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea10', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/KCDC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer10',
+        type: 'fill',
+        source: 'ProjectArea10',
+        paint: {
+          'fill-color': '#f37735',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource10', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/KCDC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer10',
+        type: 'fill',
+        source: 'CoverageSource10',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre10', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/KCDC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre10',
+        type: 'circle',
+        source: 'ProjectCentre10',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.10],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                110,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre10'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer10'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer10'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea11', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/MDC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer11',
+        type: 'fill',
+        source: 'ProjectArea11',
+        paint: {
+          'fill-color': ' #ffc425',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource11', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/MDC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer11',
+        type: 'fill',
+        source: 'CoverageSource11',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre11', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/MDC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre11',
+        type: 'circle',
+        source: 'ProjectCentre11',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.11],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                111,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre11'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer11'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer11'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea12', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/Porirua_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer12',
+        type: 'fill',
+        source: 'ProjectArea12',
+        paint: {
+          'fill-color': 'brown',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource12', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/Porirua_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer12',
+        type: 'fill',
+        source: 'CoverageSource12',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre12', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/Porirua_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre12',
+        type: 'circle',
+        source: 'ProjectCentre12',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.12],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                121,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre12'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer12'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer12'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea13', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/SWDC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer13',
+        type: 'fill',
+        source: 'ProjectArea13',
+        paint: {
+          'fill-color': '#A7226E',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource13', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/SWDC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer13',
+        type: 'fill',
+        source: 'CoverageSource13',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre13', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/SWDC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre13',
+        type: 'circle',
+        source: 'ProjectCentre13',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.13],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                131,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre13'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer13'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer13'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea14', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/UHCC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer14',
+        type: 'fill',
+        source: 'ProjectArea14',
+        paint: {
+          'fill-color': '#fba2d0',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource14', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/UHCC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer14',
+        type: 'fill',
+        source: 'CoverageSource14',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre14', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/UHCC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre14',
+        type: 'circle',
+        source: 'ProjectCentre14',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.14],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                141,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre14'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer14'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer14'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea15', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/WCC_Urban_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer15',
+        type: 'fill',
+        source: 'ProjectArea15',
+        paint: {
+          'fill-color': '#c688eb',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource15', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/WCC_Urban_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer15',
+        type: 'fill',
+        source: 'CoverageSource15',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre15', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/WAGGIS_Urbans_2024_2025/Data/WCC_Urban_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre15',
+        type: 'circle',
+        source: 'ProjectCentre15',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.15],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                151,
+                                15
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre15'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer15'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer15'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Proj_Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea16', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Napier_Urban_5cm_Imagery_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer16',
+        type: 'fill',
+        source: 'ProjectArea16',
+        paint: {
+          'fill-color': '#00b159',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource16', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Napier_Urban_5cm_Imagery_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer16',
+        type: 'fill',
+        source: 'CoverageSource16',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre16', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Napier_Urban_5cm_Imagery_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre16',
+        type: 'circle',
+        source: 'ProjectCentre16',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.16],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                161,
+                                16
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre16'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer16'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer16'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea17', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Napier_Urban_10cm_Imagery_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer17',
+        type: 'fill',
+        source: 'ProjectArea17',
+        paint: {
+          'fill-color': '#00aedb',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource17', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Napier_Urban_10cm_Imagery_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer17',
+        type: 'fill',
+        source: 'CoverageSource17',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre17', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Napier_Urban_10cm_Imagery_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre17',
+        type: 'circle',
+        source: 'ProjectCentre17',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.17],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                171,
+                                17
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre17'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer17'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer17'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+    map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea18', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Hastings_Urban_10cm_Imagery_2024_2025%20-%20Project_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer18',
+        type: 'fill',
+        source: 'ProjectArea18',
+        paint: {
+          'fill-color': '#f37735',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource18', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Hastings_Urban_10cm_Imagery_2024_2025%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer18',
+        type: 'fill',
+        source: 'CoverageSource18',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('ProjectCentre18', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Napier_Hastings_Imagery_2024_2025/Data/Hastings_Urban_10cm_Imagery_2024_2025%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre18',
+        type: 'circle',
+        source: 'ProjectCentre18',
+        paint: {
+				'circle-radius': [
+                                'interpolate',
+                                ['exponential', 1.18],
+                                ['zoom'],
+                                0,
+                                0.5,
+                                181,
+                                18
+                                ],
+                    'circle-color': 'white'
+            }
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre18'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer18'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer18'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featureProject.properties.Name + "</b></br>" +
+                              "<span style='color: black;'><b>Project Code: </b>" + featurePCentre.properties.Project + "</br>" +
+                              //"<b>Survey Type: </b>" + featureProject.properties.Survey_Typ + "</br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featurePCentre.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+       
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+   
+  </script>
+</body>
+</html>
