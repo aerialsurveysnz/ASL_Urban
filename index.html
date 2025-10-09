@@ -11,12 +11,23 @@
   <style>
     body { margin: 0; padding: 0; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-
+    .go-btn {
+      position: absolute;
+      top: 10px; left: 10px;
+      z-index: 1;
+      background: white;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font: 14px/1.2 sans-serif;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
   </style>
 </head>
 <body>
   <div id='map'></div>
-
+  <button id="goBtn" class="go-btn">ASL Rural Map</button>
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiamFtZXMtbWNrZW56aWUtYXNsIiwiYSI6ImNsaHBtYXo1aDA4MWczZ281bXJhbnc0dGMifQ.8pxJxAy6HV0CQfuibaIFmw';
 
@@ -25,6 +36,12 @@
       style: 'mapbox://styles/mapbox/satellite-streets-v12',
       center: [175.52,-41.129],
       zoom: 5
+    });
+    const TARGET_URL = 'https://aerialsurveysnz.github.io/ASL_Rural/'; // ← your URL
+
+    // Same tab:
+    document.getElementById('goBtn').addEventListener('click', () => {
+      window.location.href = TARGET_URL;
     });
 
     map.on('load', function () {
