@@ -1,0 +1,32 @@
+{
+    "type": "FeatureCollection",
+    "name": "Watercare_Manukau_2025 - Imagery_Centres",
+    "crs": {
+        "type": "name",
+        "properties": {
+            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+        }
+    },
+    "xy_coordinate_resolution": 1e-15,
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "Project": "PGRM3269",
+                "Company_Name": "Watercare Services",
+                "SN_No": "SN14404",
+                "Proj_Name": "North-eastern Manukau Harbour - 2025/26",
+                "OrthoGSD_m": "0.1",
+                "Area": 56.86,
+                "PointDensity_(points/m2)": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    174.736725476311534,
+                    -36.953361335564487
+                ]
+            }
+        }
+    ]
+}
