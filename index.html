@@ -1240,7 +1240,7 @@ map.on('load', function () {
 
           const coordinates = featurePCentre.geometry.coordinates.slice();
           const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
-                               "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14404</br>" +
+                               "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14407</br>" +
                               "<b>Sun Angle: </b> 35 Degrees</br>" +
                               "<b>Tide: </b> N/A </br>" +
                               "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
@@ -1332,7 +1332,7 @@ map.on('load', function () {
           const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
                                "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14479</br>" +
                               "<b>Sun Angle: </b> 35 Degrees</br>" +
-                              "<b>Tide: </b> N/A </br>" +
+                              "<b>Tide: </b> +-3hrs </br>" +
                               "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
                               //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
                               "<b>Area: </b>" + (featureProject.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
@@ -1421,7 +1421,7 @@ map.on('load', function () {
           const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
                                "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14480</br>" +
                               "<b>Sun Angle: </b> 35 Degrees</br>" +
-                              "<b>Tide: </b> N/A </br>" +
+                              "<b>Tide: </b> +-3hrs </br>" +
                               "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
                               //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
                               "<b>Area: </b>" + (featureProject.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
@@ -1532,6 +1532,95 @@ map.on('load', function () {
       });
 
       map.on('mouseleave', 'PCentre21', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+      map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea22', {
+        type: 'geojson',
+        data: 'Data/Hamilton_Urban_LidAR_2025 - Project_Area.geojson' 
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer22',
+        type: 'fill',
+        source: 'ProjectArea22',
+        paint: {
+          'fill-color': '#1BFC06',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource22', {
+        type: 'geojson',
+        data: 'Data/Hamilton_Urban_LidAR_2025 - Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer22',
+        type: 'fill',
+        source: 'CoverageSource22',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre22', {
+        type: 'geojson',
+        data: 'Data/Hamilton_Urban_LidAR_2025 - Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre22',
+        type: 'circle',
+        source: 'ProjectCentre22',
+      paint: {
+        'circle-radius': ['step', ['zoom'], 3, 5, 3, 10, 10],
+        'circle-color': 'white'
+      }
+
+
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre22'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer22'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer22'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
+                               "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14485</br>" +
+                              "<b>Sun Angle: </b> 35 Degrees</br>" +
+                              "<b>Tide: </b> N/A </br>" +
+                              "<b>LiDAR ppm: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featureProject.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre22', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre22', function () {
         map.getCanvas().style.cursor = '';
       });
     });
