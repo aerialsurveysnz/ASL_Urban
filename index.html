@@ -1624,6 +1624,274 @@ map.on('load', function () {
         map.getCanvas().style.cursor = '';
       });
     });
+
+     map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea23', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Queenstown_Lakes_2025_2026/Data/Queenstown_Urban_2025-26%20-%20Project_Area.geojson'
+      }); 
+
+      map.addLayer({
+        id: 'ProjectLayer23',
+        type: 'fill',
+        source: 'ProjectArea23',
+        paint: {
+          'fill-color': 'Blue',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource23', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Queenstown_Lakes_2025_2026/Data/Queenstown_Urban_2025-26%20-%20Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer23',
+        type: 'fill',
+        source: 'CoverageSource23',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre23', {
+        type: 'geojson',
+        data: 'https://aerialsurveysnz.github.io/Queenstown_Lakes_2025_2026/Data/Queenstown_Urban_2025-26%20-%20Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre23',
+        type: 'circle',
+        source: 'ProjectCentre23',
+      paint: {
+        'circle-radius': ['step', ['zoom'], 3, 5, 3, 10, 10],
+        'circle-color': 'white'
+      }
+
+
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre23'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer23'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer23'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
+                               "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14488</br>" +
+                              "<b>Sun Angle: </b> 40 Degrees</br>" +
+                              "<b>Tide: </b> N/A </br>" +
+                              "<b>Imagery GSD: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featureProject.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre23', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre23', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+          map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea24', {
+        type: 'geojson',
+        data: 'Data/Whangarei_Kawakawa_LiDAR_2025 - Project_Area.geojson' 
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer24',
+        type: 'fill',
+        source: 'ProjectArea24',
+        paint: {
+          'fill-color': '#1BFC06',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource24', {
+        type: 'geojson',
+        data: 'Data/Whangarei_Kawakawa_LiDAR_2025 - Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer24',
+        type: 'fill',
+        source: 'CoverageSource24',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre24', {
+        type: 'geojson',
+        data: 'Data/Whangarei_Kawakawa_LiDAR_2025 - Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre24',
+        type: 'circle',
+        source: 'ProjectCentre24',
+      paint: {
+        'circle-radius': ['step', ['zoom'], 3, 5, 3, 10, 10],
+        'circle-color': 'white'
+      }
+
+
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre24'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer24'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer24'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
+                               "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14490</br>" +
+                              "<b>Sun Angle: </b> 35 Degrees</br>" +
+                              "<b>Tide: </b> N/A </br>" +
+                              "<b>LiDAR ppm: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featureProject.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre24', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre24', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
+          map.on('load', function () {
+      // Add your sources and layers here...
+
+      map.addSource('ProjectArea25', {
+        type: 'geojson',
+        data: 'Data/Macraes_Mine_LiDAR_2025 - Project_Area.geojson' 
+      });
+
+      map.addLayer({
+        id: 'ProjectLayer25',
+        type: 'fill',
+        source: 'ProjectArea25',
+        paint: {
+          'fill-color': '#1BFC06',
+          'fill-opacity': 0.5
+        }
+      });
+
+      map.addSource('CoverageSource25', {
+        type: 'geojson',
+        data: 'Data/Macraes_Mine_LiDAR_2025 - Captured_Area.geojson'
+      });
+
+      map.addLayer({
+        id: 'CoverageLayer25',
+        type: 'fill',
+        source: 'CoverageSource25',
+        paint: {
+          'fill-color': '#FF0000',
+          'fill-opacity': 0.0
+        }
+      });
+
+      map.addSource('ProjectCentre25', {
+        type: 'geojson',
+        data: 'Data/Macraes_Mine_LiDAR_2025 - Imagery_Centres.geojson'
+      });
+
+      map.addLayer({
+        id: 'PCentre25',
+        type: 'circle',
+        source: 'ProjectCentre25',
+      paint: {
+        'circle-radius': ['step', ['zoom'], 3, 5, 3, 10, 10],
+        'circle-color': 'white'
+      }
+
+
+      });
+      map.on('click', function () {
+        const featuresPCentre = map.queryRenderedFeatures({ layers: ['PCentre25'] });
+        const featuresCoverage = map.queryRenderedFeatures({ layers: ['CoverageLayer25'] });
+        const featuresProject = map.queryRenderedFeatures({ layers: ['ProjectLayer25'] });
+
+        if (featuresPCentre.length > 0 && featuresProject.length > 0) {
+          const featurePCentre = featuresPCentre[0];
+          const featureCoverage = featuresCoverage[0];
+          const featureProject = featuresProject[0];
+
+          const coordinates = featurePCentre.geometry.coordinates.slice();
+          const description = "<span style='color: #7FBA00;font-size: 10px;'><b>" + featurePCentre.properties.Proj_Name + "</b></br>" +
+                               "<span style='color: black;'><b>Project/SN: </b>" + featureProject.properties.Project + " / SN14485</br>" +
+                              "<b>Sun Angle: </b> 35 Degrees</br>" +
+                              "<b>Tide: </b> N/A </br>" +
+                              "<b>LiDAR ppm: </b>" + featurePCentre.properties.OrthoGSD_m + "</br>" +
+                              //"<b>Point Density: </b>" + featurePCentre.properties.Point_Dens + "</br>" +
+                              "<b>Area: </b>" + (featureProject.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })+ " km²</br>" +
+                              "<b>Captured Area: </b>" + (featureCoverage.properties.Area).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " km²</br>" +
+                              "<b>Coverage To Date: </b>" + featureCoverage.properties.Percentage_Coverage + "%</b></br>";
+
+          var popupContent = document.createElement('div');
+          popupContent.innerHTML = description;
+
+          var popup = new mapboxgl.Popup({  closeOnClick: true })
+            .setLngLat(coordinates)
+            .setDOMContent(popupContent)
+            .addTo(map);
+        }
+      });
+
+      map.on('mouseenter', 'PCentre25', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'PCentre25', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+
   </script>
 </body>
 </html>

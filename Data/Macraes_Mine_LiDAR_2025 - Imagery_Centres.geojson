@@ -1,0 +1,29 @@
+{
+    "type": "FeatureCollection",
+    "name": "Macraes_Mine_LiDAR_2025 - Imagery_Centres",
+    "crs": {
+        "type": "name",
+        "properties": {
+            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+        }
+    },
+    "xy_coordinate_resolution": 1e-15,
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "Project": "FPFA",
+                "Proj_Name": "Macraes_Mine_LiDAR_2025",
+                "Survey_Typ": "Imagery",
+                "OrthoGSD_m": 16.0
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    170.44867537702055,
+                    -45.368584007852114
+                ]
+            }
+        }
+    ]
+}
