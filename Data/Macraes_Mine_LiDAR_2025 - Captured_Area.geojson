@@ -1,81 +1,9 @@
 {
-    "type": "FeatureCollection",
-    "name": "Macraes_Mine_LiDAR_2025 - Captured_Area",
-    "crs": {
-        "type": "name",
-        "properties": {
-            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-        }
-    },
-    "xy_coordinate_resolution": 1e-15,
-    "features": [
-        {
-            "type": "Feature",
-            "properties": {
-                "id": null,
-                "layer": "Macraes Area (31.5x9-13km) LiDAR NZTM",
-                "path": "Y:/Tenders and Proposals/OceanaGold/LiDAR+Imagery - Macraes Mine 2025/07_Client_AOIs/Macraes Area (31.5x9-13km) LiDAR NZTM/Macraes Area (31.5x9-13km) LiDAR NZTM.shp",
-                "Area": 0,
-                "Percentage_Coverage": 0.0,
-                "Project": "FPFA"
-            },
-            "geometry": {
-                "type": "MultiPolygon",
-                "coordinates": [
-                    [
-                        [
-                            [
-                                170.329853127280302,
-                                -45.370251124168902
-                            ],
-                            [
-                                170.276171607933321,
-                                -45.293746307554613
-                            ],
-                            [
-                                170.35757783599604,
-                                -45.236706978439614
-                            ],
-                            [
-                                170.456419682974968,
-                                -45.306890555200617
-                            ],
-                            [
-                                170.49245358048617,
-                                -45.319665270590107
-                            ],
-                            [
-                                170.546505310685234,
-                                -45.357892723241882
-                            ],
-                            [
-                                170.564523351761295,
-                                -45.383353754604315
-                            ],
-                            [
-                                170.641271634256611,
-                                -45.43745119587809
-                            ],
-                            [
-                                170.559868685665805,
-                                -45.494687404657135
-                            ],
-                            [
-                                170.519218318205105,
-                                -45.466026098553073
-                            ],
-                            [
-                                170.410868772215281,
-                                -45.427696608814401
-                            ],
-                            [
-                                170.329853127280302,
-                                -45.370251124168902
-                            ]
-                        ]
-                    ]
-                ]
-            }
-        }
-    ]
+"type": "FeatureCollection",
+"name": "Macraes_Mine_LiDAR_2025 - Project_Area",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"xy_coordinate_resolution": 1e-15,
+"features": [
+{ "type": "Feature", "properties": { "id": null, "layer": "Macraes Area (31.5x9-13km) LiDAR NZTM", "path": "Y:/Tenders and Proposals/OceanaGold/LiDAR+Imagery - Macraes Mine 2025/07_Client_AOIs/Macraes Area (31.5x9-13km) LiDAR NZTM/Macraes Area (31.5x9-13km) LiDAR NZTM.shp", "Area": 346.4945515315647, "Percentage_Coverage": 100.0, "Project": "FPFA" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 170.329853127280302, -45.370251124168902 ], [ 170.276171607933321, -45.293746307554613 ], [ 170.35757783599604, -45.236706978439614 ], [ 170.456419682974968, -45.306890555200617 ], [ 170.49245358048617, -45.319665270590107 ], [ 170.546505310685234, -45.357892723241882 ], [ 170.564523351761295, -45.383353754604315 ], [ 170.641271634256611, -45.43745119587809 ], [ 170.559868685665805, -45.494687404657135 ], [ 170.519218318205105, -45.466026098553073 ], [ 170.410868772215281, -45.427696608814401 ], [ 170.329853127280302, -45.370251124168902 ] ] ] ] } }
+]
 }
