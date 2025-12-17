@@ -17,12 +17,11 @@
                 "PERIMETER": "30.46 km",
                 "ENCLOSED_A": "56.9 sq km",
                 "Project": "PGRM3269",
-                "path": "Y:/Projects/WATERCARE SERVICES LTD/PGRM3269 - North Eastern Manukau Harbour 2025-2026/07_Client_AOIs/Manukau Harbour.shp",
-                "SN_No": "Watercare Services",
-                "Company_Name": "SN14404",
+                "SN_No": "SN14404",
+                "Company_Name": "Watercare Services",
                 "Description": "North-eastern Manukau Harbour - 2025/26 flying 7136 ft & orthos",
                 "Area": 56.865081007025168,
-                "Percentage_Coverage": 0.0
+                "Percentage_Coverage": 100.0
             },
             "geometry": {
                 "type": "MultiPolygon",
